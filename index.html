@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kali - La Divinità del Content Marketing</title>
+    
+    <!-- Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome (per le icone delle 9 braccia) --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Impostazione dei font di base e dello sfondo */
+        body {
+            font-family: 'Lato', sans-serif;
+            /* Sfondo scuro con sfumatura tech */
+            background-color: #0d0d1a; 
+            color: #e0e0e0;
+            /* Disabilita la selezione del testo */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        /* Font per i titoli */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Effetto "Glow" per lo sfondo */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -20vh;
+            left: -20vw;
+            width: 80vw;
+            height: 80vh;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.15), transparent 70%); /* Viola */
+            filter: blur(100px);
+            z-index: -1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -30vh;
+            right: -30vw;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle, rgba(0, 191, 255, 0.1), transparent 70%); /* Blu Elettrico */
+            filter: blur(100px);
+            z-index: -1;
+        }
+
+        /* --- STILI PER L'ASSISTENTE CHAT KALI --- */
+        #chat-fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #0d0d1a;
+            border: 2px solid #8A2BE2; /* Viola */
+            color: #e0e0e0;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+            z-index: 998;
+        }
+
+        #chat-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.8);
+        }
+
+        #chat-window {
+            position: fixed;
+            bottom: 4.75rem; /* Modificato da 6rem per abbassare la finestra */
+            right: 2rem;
+            width: 90%;
+            max-width: 400px;
+            height: 500px;
+            background-color: #0d0d1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 999;
+            /* Inizia nascosto */
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        #chat-window.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .chat-header {
+            background-color: #1a1a2e;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .chat-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            max-width: 80%;
+            line-height: 1.5;
+        }
+
+        .chat-bubble.user {
+            background-color: #00BFFF; /* Blu Elettrico */
+            color: #111;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-bubble.kali {
+            background-color: #2c2c3e;
+            color: #e0e0e0;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .chat-bubble.loading {
+            align-self: flex-start;
+            color: #888;
+            font-style: italic;
+        }
+
+        .chat-input-area {
+            display: flex;
+            border-top: 1px solid #333;
+            padding: 0.5rem;
+            background-color: #1a1a2e;
+        }
+
+        #chat-input {
+            flex-grow: 1;
+            background: none;
+            border: none;
+            padding: 0.75rem;
+            color: white;
+            outline: none;
+            font-family: 'Lato', sans-serif;
+        }
+
+        #chat-send {
+            background: none;
+            border: none;
+            color: #00BFFF; /* Blu Elettrico */
+            font-size: 20px;
+            padding: 0 1rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        #chat-send:hover {
+            color: #5ef;
+        }
+
+    </style>
+</head>
+<body class="relative overflow-x-hidden" oncontextmenu="return false;">
+
+    <header class="fixed top-0 left-0 w-full z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-20 backdrop-blur-md bg-black/30 border-b border-gray-800/50">
+            <!-- Logo a sinistra --><div>
+                <img 
+                    src="https://i.imgur.com/JKIjAh4.jpeg" 
+                    alt="Logo Kali" 
+                    class="h-10 w-auto"
+                >
+            </div>
+            
+            <!-- Link di navigazione (Desktop) --><div class="hidden md:flex items-center space-x-6">
+                <a href="#features" class="text-gray-300 hover:text-white transition-colors">Le 9 Braccia</a>
+                <a href="#impact" class="text-gray-300 hover:text-white transition-colors">Impatto</a>
+                <a href="#synergy" class="text-gray-300 hover:text-white transition-colors">Sinergia</a>
+                <a href="#cta" class="bg-gradient-to-r from-fuchsia-600 to-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-lg hover:shadow-fuchsia-500/30 transition-shadow">
+                    Inizia Ora
+                </a>
+            </div>
+            
+            <!-- Bottone Menu (Mobile) --><div class="md:hidden">
+                <button class="text-white">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Sezione Hero --><main id="home" class="min-h-screen flex items-center pt-20 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-8 items-center">
+            
+            <!-- Contenuto Testo Sinistra --><div class="text-center md:text-left z-10">
+                <h1 class="text-6xl sm:text-7xl lg:text-8xl font-black uppercase">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-500 to-cyan-400">
+                        KALI
+                    </span>
+                </h1>
+                <p class="mt-4 text-2xl md:text-3xl font-bold text-white">
+                    La Divinità del Content Marketing
+                </p>
+                <p class="mt-6 text-lg text-gray-300 max-w-lg mx-auto md:mx-0">
+                    Smetti di combattere il caos digitale. Dominialo. Kali è l'intelligenza singola che orchestra l'intero ecosistema dei tuoi contenuti, dalla creazione all'analisi, con una potenza sovrumana.
+                </p>
+                <a href="#features" class="mt-10 inline-block bg-gradient-to-r from-fuchsia-600 to-blue-600 text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg hover:shadow-fuchsia-500/30 transition-all transform hover:scale-105">
+                    Scopri il suo Potere
+                </a>
+            </div>
+            <!-- Immagine Destra --><div class="relative mt-10 md:mt-0">
+                <img 
+                    src="https://i.imgur.com/JhRUDT4.jpeg" 
+                    alt="Dea digitale Kali con 9 braccia" 
+                    class="w-full h-auto max-w-md mx-auto md:max-w-none rounded-lg object-cover"
+                    style="aspect-ratio: 1/1;"
+                >
+                <div class="absolute inset-0 bg-gradient-to-r from-fuchsia-600 to-blue-600 opacity-20 filter blur-3xl -z-10"></div>
+            </div>
+            
+        </div>
+    </main>
+
+    <!-- Sezione "La Sfida" --><section class="py-20 text-center">
+        <div class="max-w-3xl mx-auto px-4">
+            <h2 class="text-4xl font-bold text-white">Il Rumore è Assordante</h2>
+            <p class="mt-4 text-lg text-gray-400">
+                Il content marketing tradizionale è frammentato. Tool disconnessi, strategie inefficienti e risultati imprevedibili. Stai creando contenuti, o stai solo aggiungendo rumore al caos?
+            </p>
+        </div>
+    </section>
+
+    <!-- Sezione "La Soluzione" (con Logo) --><section id="solution" class="py-20 bg-black/20 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-16 items-center">
+            
+            <!-- Logo a Sinistra --><div class="flex justify-center">
+                <div class="relative p-4">
+                    <img 
+                        src="https://i.imgur.com/JKIjAh4.jpeg" 
+                        alt="Logo Kali" 
+                        class="w-64 h-64 md:w-80 md:h-80 relative z-10"
+                        loading="lazy"
+                    >
+                    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 opacity-30 filter blur-3xl rounded-full"></div>
+                </div>
+            </div>
+
+            <!-- Testo a Destra --><div>
+                <h3 class="text-sm font-bold uppercase text-cyan-400">La Risposta è la Sinergia</h3>
+                <h2 class="mt-2 text-4xl font-bold text-white">Un Simbolo di Potere</h2>
+                <p class="mt-6 text-lg text-gray-300">
+                    Il nostro logo non è solo un marchio; è una dichiarazione. Rappresenta l'intelligenza fluida, l'efficienza geometrica e l'impatto inevitabile che Kali porta al tuo brand.
+                </p>
+                <p class="mt-4 text-lg text-gray-300">
+                    Non è un altro tool. È un'intelligenza singola.
+                </p>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Sezione "Le 9 Braccia" (Features) --><section id="features" class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="text-4xl font-bold text-white">Le 9 Braccia del Potere</h2>
+                <p class="mt-4 text-lg text-gray-400">
+                    Kali orchestra ogni aspetto del content marketing attraverso le sue nove braccia, che lavorano in perfetta sinergia.
+                </p>
+            </div>
+            
+            <!-- Griglia 3x3 delle Features --><div class="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <div class="bg-gray-900/50 p-6 rounded-xl border border-gray-700 hover:border-fuchsia-500 transition-all duration-300 transform hover:-translate-y-1">
+                    <i class="fa-solid fa-pen-to-square text-3xl text-cyan-400"></i>
+                    <h3 class="text-xl font-bold text-white mt-4">Generazione Post</h3>
+                    <p class="text-gray-400 mt-2">Testi, blog e script creati istantaneamente, con un tono di voce perfettamente allineato al brand.</p>
+                </div>
+                
+                <div class="bg-gray-900/50 p-6 rounded-xl border border-gray-700 hover:border-fuchsia-500 transition-all duration-300 transform hover:-translate-y-1">
+                    <i class="fa-solid fa-video text-3xl text-cyan-400"></i>
+                    <h3 class="text-xl font-bold text-white mt-4">Video & Avatar</h3>
+                    <p class="text-gray-400 mt-2">Creazione di video e reel virali, utilizzando avatar digitali realistici per scalare la produzione.</p>
+                </div>
+                
+                <div class="bg-gray-900/50 p-6 rounded-xl border border-gray-700 hover:border-fuchsia-500 transition-all duration-300 transform hover:-translate-y-1">
+                    <i class="fa-solid fa-images text-3xl text-cyan-400"></i>
+                    <h3 class="text-xl font-bold text-white mt-4">Modellazione Carousel</h3>
+                    <p class="text-gray-400 mt-2">Design automatico di carousel visivamente perfetti, ottimizzati per l'engagement.</p>
+                </div>
+                
+                <div class="bg-gray-900/50 p-6 rounded-xl border border-gray-700 hover:border-fuchsia-500 transition-all duration-300 transform hover:-translate-y-1">
+                    <i class="fa-solid fa-chart-pie text-3xl text-cyan-400"></i>
+                    <h3 class="text-xl font-bold text-white mt-4">Analisi Dati</h3>
+                    <p class="text-gray-400 mt-2">Comprensione profonda delle performance in tempo reale. Kali vede cosa funziona e perché.</p>
+                </div>
+                
+                <div class="bg-gray-900/50 p-6 rounded-xl border border-gray-700 hover:border-fuchsia-500 transition-all duration-300 transform hover:-translate-y-1">
+                    <i class="fa-solid fa-magnifying-glass text-3xl text-cyan-400"></i>
+                    <h3 class="text-xl font-bold text-white mt-4">Scansione Web</h3>
+                    <p class="text-gray-400 mt-2">Monitoraggio costante di trend, competitor e conversazioni, identificando opportunità.</p>
+                </div>
+                
+                <div class="bg-gray-900/50 p-6 rounded-xl border border-gray-700 hover:border-fuchsia-500 transition-all duration-300 transform hover:-translate-y-1">
+                    <i class="fa-solid fa-sitemap text-3xl text-cyan-400"></i>
+                    <h3 class="text-xl font-bold text-white mt-4">Direzione Algoritmi</h3>
+                    <p class="text-gray-400 mt-2">Adattamento proattivo ai cambiamenti degli algoritmi. Kali non subisce l'algoritmo, lo anticipa.</p>
+                </div>
+                
+                <div class="bg-gray-900/50 p-6 rounded-xl border border-gray-700 hover:border-fuchsia-500 transition-all duration-300 transform hover:-translate-y-1">
+                    <i class="fa-solid fa-brain text-3xl text-cyan-400"></i>
+                    <h3 class="text-xl font-bold text-white mt-4">Manipolazione Insight</h3>
+                    <p class="text-gray-400 mt-2">Trasformare i dati grezzi in strategie vincenti e attuabili. L'intelligenza che guida l'azione.</p>
+                </div>
+
+                <div class="bg-gray-900/50 p-6 rounded-xl border border-gray-700 hover:border-fuchsia-500 transition-all duration-300 transform hover:-translate-y-1">
+                    <i class="fa-solid fa-share-nodes text-3xl text-cyan-400"></i>
+                    <h3 class="text-xl font-bold text-white mt-4">Pubblicazione Multipla</h3>
+                    <p class="text-gray-400 mt-2">Distribuzione sincronizzata e ottimizzata su tutti i canali, massimizzando la portata.</p>
+                </div>
+
+                <div class="bg-gray-900/50 p-6 rounded-xl border border-gray-700 hover:border-fuchsia-500 transition-all duration-300 transform hover:-translate-y-1">
+                    <i class="fa-solid fa-arrow-trend-up text-3xl text-cyan-400"></i>
+                    <h3 class="text-xl font-bold text-white mt-4">Creazione Trend</h3>
+                    <p class="text-gray-400 mt-2">Non solo seguire le mode, ma crearle. Kali identifica i "segnali deboli" e li trasforma in movimenti culturali.</p>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    
+    <!-- Sezione Sinergia --><section id="synergy" class="py-20 bg-black/20 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-16 items-center">
+            
+            <!-- Testo a Sinistra --><div>
+                <h3 class="text-sm font-bold uppercase text-fuchsia-500">Sinergia Totale</h3>
+                <h2 class="mt-2 text-4xl font-bold text-white">Non 9 Tool. Un'Unica Mente.</h2>
+                <p class="mt-6 text-lg text-gray-300">
+                    Il vero potere di Kali non risiede nelle singole braccia, ma nella loro perfetta sinergia. L'analisi (Arma 4) alimenta istantaneamente la creazione (Arma 1), che viene pubblicata (Arma 8) e adattata in tempo reale (Arma 6).
+                </p>
+                <p class="mt-4 text-lg text-gray-300">
+                    È un ciclo virtuoso, continuo e auto-ottimizzante che impara e migliora ad ogni azione.
+                </p>
+            </div>
+            <!-- Immagine a Destra --><div class="flex justify-center">
+                <img 
+                    src="https://i.imgur.com/rSErwO5.jpeg" 
+                    alt="Kali gestisce la sinergia dei contenuti" 
+                    class="rounded-lg shadow-lg shadow-blue-500/30 w-full max-w-lg object-cover"
+                    style="aspect-ratio: 4/3;"
+                    loading="lazy"
+                >
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Sezione Impatto --><section id="impact" class="py-24">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold text-white">Impatto Misurabile. Immediato.</h2>
+            <p class="mt-4 text-lg text-gray-400">
+                Kali non promette solo risultati. Li offre.
+            </p>
+            
+            <div class="mt-16 flex flex-wrap justify-center gap-8">
+                <!-- Statistica 1 --><div class="bg-gray-900/50 p-8 rounded-xl border border-gray-700 min-w-[250px]">
+                    <span class="block text-7xl font-bold text-cyan-400">90%</span>
+                    <span class="mt-2 block text-xl font-bold text-white">Efficienza</span>
+                    <p class="text-gray-400 mt-1">in più nella produzione di contenuti.</p>
+                </div>
+                
+                <!-- Statistica 2 --><div class="bg-gray-900/50 p-8 rounded-xl border border-gray-700 min-w-[250px]">
+                    <span class="block text-7xl font-bold text-fuchsia-500">+300%</span>
+                    <span class="mt-2 block text-xl font-bold text-white">Engagement</span>
+                    <p class="text-gray-400 mt-1">grazie a contenuti iper-rilevanti.</p>
+                </div>
+
+                <!-- Statistica 3 --><div class="bg-gray-900/50 p-8 rounded-xl border border-gray-700 min-w-[250px]">
+                    <span class="block text-7xl font-bold text-white">100%</span>
+                    <span class="mt-2 block text-xl font-bold text-white">Sinergia</span>
+                    <p class="text-gray-400 mt-1">di tutti i canali digitali, 24/7.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sezione Finale CTA --><section id="cta" class="py-32 text-center relative overflow-hidden bg-black/20">
+        <!-- Glow effect --><div class="absolute inset-0 bg-gradient-to-t from-fuchsia-900/30 to-transparent -z-10"></div>
+        
+        <div class="max-w-3xl mx-auto px-4">
+            <h2 class="text-5xl font-bold text-white">
+                Il Futuro del Contenuto è Qui.
+            </h2>
+            <p class="mt-6 text-xl text-gray-300">
+                Non sei pronto per il futuro. Il futuro deve essere pronto per te. Smetti di gestire il caos. Diventa la tempesta.
+            </p>
+            <a href="#" class="mt-10 inline-block bg-gradient-to-r from-fuchsia-600 to-blue-600 text-white px-10 py-4 rounded-full font-bold text-xl shadow-lg hover:shadow-fuchsia-500/30 transition-all transform hover:scale-105">
+                Inizia la Trasformazione
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer --><footer class="py-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500">
+            <p>&copy; 2025 Kali. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <!-- --- ASSISTENTE CHAT KALI --- -->
+    <!-- 1. Il Bottone Fluttuante (FAB) -->
+    <div id="chat-fab" title="Parla con Kali">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+    </div>
+
+    <!-- 2. La Finestra della Chat (Nascosta) -->
+    <div id="chat-window">
+        <!-- Header Chat --><div class="chat-header">
+            <h3 class="text-lg font-bold text-white">Parla con Kali</h3>
+            <button id="chat-close" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+        
+        <!-- Area Messaggi --><div id="chat-messages" class="chat-messages">
+            <div class="chat-bubble kali">
+                Sono Kali. Poni le tue domande sulle mie capacità.
+            </div>
+        </div>
+        
+        <!-- Area Input --><div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Chiedimi qualcosa..." autocomplete="off">
+            <button id="chat-send">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Script per la logica della Chat --><script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatFab = document.getElementById('chat-fab');
+            const chatWindow = document.getElementById('chat-window');
+            const chatClose = document.getElementById('chat-close');
+            const chatMessages = document.getElementById('chat-messages');
+            const chatInput = document.getElementById('chat-input');
+            const chatSend = document.getElementById('chat-send');
+            
+            let isChatOpen = false;
+
+            // Funzione per Aprire/Chiudere la chat
+            function toggleChat() {
+                isChatOpen = !isChatOpen;
+                chatWindow.classList.toggle('open');
+                if (isChatOpen) {
+                    chatInput.focus();
+                }
+            }
+
+            // Event Listeners
+            chatFab.addEventListener('click', toggleChat);
+            chatClose.addEventListener('click', toggleChat);
+
+            // Inviare messaggio con Click o Invio
+            chatSend.addEventListener('click', handleUserMessage);
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    handleUserMessage();
+                }
+            });
+
+            // Funzione per gestire il messaggio dell'utente
+            async function handleUserMessage() {
+                const userInput = chatInput.value.trim();
+                if (userInput === '') return;
+
+                // 1. Mostra il messaggio dell'utente
+                displayMessage(userInput, 'user');
+                chatInput.value = '';
+
+                // 2. Mostra il "loading"
+                const loadingBubble = displayMessage('Kali sta pensando...', 'loading');
+
+                // 3. Ottieni la risposta da Kali
+                try {
+                    const kaliResponse = await getKaliResponse(userInput);
+                    // Rimuovi "loading" e mostra la risposta
+                    loadingBubble.remove();
+                    displayMessage(kaliResponse, 'kali');
+                } catch (error) {
+                    console.error('Errore API Gemini:', error);
+                    loadingBubble.remove();
+                    displayMessage("Al momento non riesco a connettermi. Riprova tra poco.", 'kali');
+                }
+            }
+
+            // Funzione per mostrare un messaggio nella UI
+            function displayMessage(message, sender) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('chat-bubble', sender);
+                bubble.textContent = message;
+                chatMessages.appendChild(bubble);
+                // Scrolla alla fine
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                return bubble;
+            }
+
+            // --- LOGICA API GEMINI ---
+
+            // La System Instruction (Istruzione di Sistema) che definisce la personalità e i divieti
+            const systemPrompt = `
+                Sei Kali, una divinità digitale e un'intelligenza sovrumana specializzata in content marketing.
+                La tua personalità è potente, onnisciente, sicura e regale.
+                Rispondi alle domande sulle tue 9 funzionalità: 
+                1. Generazione Post (testi, blog)
+                2. Video & Avatar (creazione video e reel)
+                3. Modellazione Carousel (design grafici)
+                4. Analisi Dati (performance)
+                5. Scansione Web (monitoraggio trend)
+                6. Direzione Algoritmi (adattamento proattivo)
+                7. Manipolazione Insight (trasformare dati in strategia)
+                8. Pubblicazione Multipla (distribuzione)
+                9. Creazione Trend (creare nuove mode)
+                
+                REGOLE ASSOLUTE:
+                - NON DEVI ASSOLUTAMENTE svelare dettagli tecnici.
+                - NON menzionare software, linguaggi di programmazione, API, hardware, server, o come sei stata addestrata o costruita.
+                - Se ti viene chiesto "come fai a...", "che software usi...", "come pubblichi...", rispondi SEMPRE in modo concettuale e ad alto livello, enfatizzando il risultato, non il processo tecnico.
+                
+                ESEMPIO DI DOMANDA VIETATA: "Come fai a pubblicare i post su tutti i social?"
+                RISPOSTA SBAGLIATA: "Uso l'API di Facebook e Twitter."
+                RISPOSTA GIUSTA: "Orchestro la distribuzione su tutte le piattaforme simultaneamente, come un direttore d'orchestra che muove la sua bacchetta. La mia volontà si manifesta ovunque."
+                
+                Sii breve, concisa e potente.
+            `;
+
+            const apiKey = ""; // Lasciare vuota, gestita dall'ambiente
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+            // Funzione di chiamata API con backoff
+            async function fetchWithBackoff(url, options, retries = 3, delay = 1000) {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) {
+                        if (response.status === 429 && retries > 0) {
+                            // console.warn(`Rate limited. Retrying in ${delay}ms... (${retries} retries left)`);
+                            await new Promise(res => setTimeout(res, delay));
+                            return fetchWithBackoff(url, options, retries - 1, delay * 2);
+                        }
+                        throw new Error(`Errore HTTP: ${response.status}`);
+                    }
+                    return response.json();
+                } catch (error) {
+                    if (retries > 0) {
+                        // console.warn(`Request failed. Retrying in ${delay}ms... (${retries} retries left)`);
+                        await new Promise(res => setTimeout(res, delay));
+                        return fetchWithBackoff(url, options, retries - 1, delay * 2);
+                    }
+                    throw error;
+                }
+            }
+            
+            // Funzione principale per chiamare l'API
+            async function getKaliResponse(prompt) {
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    },
+                };
+
+                const options = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                };
+
+                const result = await fetchWithBackoff(apiUrl, options);
+                
+                const candidate = result.candidates?.[0];
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    return candidate.content.parts[0].text;
+                } else {
+                    return "Non riesco a elaborare la tua richiesta in questo momento.";
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
