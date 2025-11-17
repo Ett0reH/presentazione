@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preventivo Interattivo: Formazione AI per Gruppo Atomix</title>
+    <!-- Caricamento di Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Caricamento del font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Applicazione del font Inter a tutto il documento */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Stile per un'intestazione con gradiente */
+        .header-gradient {
+            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+        }
+        /* Animazione per la comparsa degli elementi */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* Stili per la chat AI */
+        #chat-messages {
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-bubble-user {
+            background-color: #e0e7ff; /* indigo-100 */
+            color: #312e81; /* indigo-900 */
+            padding: 10px 15px;
+            border-radius: 15px 15px 0 15px;
+            align-self: flex-end;
+            max-width: 80%;
+            word-wrap: break-word;
+            margin-top: 4px;
+        }
+        .chat-bubble-ai {
+            background-color: #f3f4f6; /* gray-100 */
+            color: #1f2937; /* gray-800 */
+            padding: 10px 15px;
+            border-radius: 15px 15px 15px 0;
+            align-self: flex-start;
+            max-width: 80%;
+            word-wrap: break-word;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="min-h-screen">
+        <!-- Intestazione -->
+        <header class="header-gradient text-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight">Preventivo Formazione AI 🧠</h1>
+                <p class="mt-2 text-xl font-medium text-indigo-100">Proposta per: <span class="font-bold">Gruppo Atomix – Agenzia di Pubblicità</span></p>
+                <div class="mt-4 flex flex-wrap gap-4 text-sm">
+                    <span class="inline-flex items-center bg-white/10 px-3 py-1 rounded-full">Proposto da: <strong>DNArt – AI & Digital Innovation</strong></span>
+                    <span class="inline-flex items-center bg-white/10 px-3 py-1 rounded-full">Referente: <strong>Stefano Giurin</strong></span>
+                    <span class="inline-flex items-center bg-white/10 px-3 py-1 rounded-full">Validità: <strong>60 giorni</strong></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Contenuto principale: layout a due colonne -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="lg:grid lg:grid-cols-3 lg:gap-8">
+                
+                <!-- Colonna sinistra: Opzioni e dettagli -->
+                <div class="lg:col-span-2 space-y-6">
+
+                    <!-- Obiettivo -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg fade-in" style="animation-delay: 100ms;">
+                        <h2 class="text-2xl font-bold text-gray-900">🎯 Obiettivo del Progetto Formativo</h2>
+                        <p class="mt-4 text-gray-600">
+                            Formare i team creativi, strategist e account di Gruppo Atomix sull’utilizzo delle AI generative e delle tecniche di prompt engineering per migliorare efficienza, creatività e qualità delle produzioni in quattro aree chiave dell'agenzia: Video, Creatività, Copywriting e Progettazione Eventi.
+                        </p>
+                    </div>
+
+                    <!-- Configuratore Pacchetti -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg fade-in" style="animation-delay: 200ms;">
+                        <h2 class="text-2xl font-bold text-gray-900">🧩 Configura la tua Formazione</h2>
+                        <p class="mt-2 text-gray-600">Scegli tra i pacchetti suggeriti o seleziona i corsi e moduli singoli.</p>
+                        
+                        <!-- Selezione Tipo Pacchetto (Radio) -->
+                        <fieldset class="mt-6">
+                            <legend class="text-lg font-semibold text-gray-800">Tipo di Pacchetto</legend>
+                            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Opzione 1: Individuali -->
+                                <label for="pkg-individuali" class="relative flex items-start p-4 rounded-lg border bg-white shadow-sm cursor-pointer hover:bg-gray-50 has-[:checked]:border-indigo-600 has-[:checked]:ring-2 has-[:checked]:ring-indigo-600">
+                                    <input type="radio" name="package-type" id="pkg-individuali" value="individuali" class="sr-only" data-price="0" checked>
+                                    <div class="flex-1">
+                                        <span class="block text-lg font-medium text-gray-900">Selezione Singola</span>
+                                        <span class="mt-1 block text-sm text-gray-600">Crea il tuo pacchetto su misura selezionando corsi e moduli.</span>
+                                    </div>
+                                </label>
+                                <!-- Opzione 2: Creatives -->
+                                <label for="pkg-creatives" class="relative flex items-start p-4 rounded-lg border bg-white shadow-sm cursor-pointer hover:bg-gray-50 has-[:checked]:border-indigo-600 has-[:checked]:ring-2 has-[:checked]:ring-indigo-600">
+                                    <input type="radio" name="package-type" id="pkg-creatives" value="creatives" class="sr-only" data-price="5500" data-name="Pacchetto AI for Creatives (Corsi 1+2)">
+                                    <div class="flex-1">
+                                        <span class="block text-lg font-medium text-gray-900">Pacchetto AI for Creatives</span>
+                                        <span class="mt-1 block text-sm text-gray-600">Include Corso Video + Corso Creatività.</span>
+                                        <span class="mt-2 block text-xl font-bold text-indigo-600">€ 5.500</span>
+                                    </div>
+                                </label>
+                                <!-- Opzione 3: Strategists -->
+                                <label for="pkg-strategists" class="relative flex items-start p-4 rounded-lg border bg-white shadow-sm cursor-pointer hover:bg-gray-50 has-[:checked]:border-indigo-600 has-[:checked]:ring-2 has-[:checked]:ring-indigo-600">
+                                    <input type="radio" name="package-type" id="pkg-strategists" value="strategists" class="sr-only" data-price="5500" data-name="Pacchetto AI for Strategists (Corsi 4+5)">
+                                    <div class="flex-1">
+                                        <span class="block text-lg font-medium text-gray-900">Pacchetto AI for Strategists</span>
+                                        <span class="mt-1 block text-sm text-gray-600">Include Corso Copy + Corso Eventi.</span>
+                                        <span class="mt-2 block text-xl font-bold text-indigo-600">€ 5.500</span>
+                                    </div>
+                                </label>
+                                <!-- Opzione 4: Full Academy -->
+                                <label for="pkg-academy" class="relative flex items-start p-4 rounded-lg border bg-white shadow-sm cursor-pointer hover:bg-gray-50 has-[:checked]:border-indigo-600 has-[:checked]:ring-2 has-[:checked]:ring-indigo-600">
+                                    <input type="radio" name="package-type" id="pkg-academy" value="academy" class="sr-only" data-price="12000" data-name="AI Full Academy Atomix (Tutti i 5 corsi)">
+                                    <div class="flex-1">
+                                        <span class="block text-lg font-medium text-gray-900">AI Full Academy Atomix</span>
+                                        <span class="mt-1 block text-sm text-gray-600">Include tutti i 5 corsi principali.</span>
+                                        <span class="mt-2 block text-xl font-bold text-indigo-600">€ 12.000</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </fieldset>
+
+                        <!-- Contenitore Corsi/Moduli Individuali (visibile solo se "individuali" è selezionato) -->
+                        <div id="individuali-container" class="mt-8 space-y-6">
+                            <!-- Corsi Principali (Checkbox) -->
+                            <fieldset>
+                                <legend class="text-lg font-semibold text-gray-800">Corsi Principali (8 ore ciascuno)</legend>
+                                <div class="mt-4 space-y-3">
+                                    <label class="flex items-center p-4 rounded-lg border hover:bg-gray-50 transition-colors">
+                                        <input type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 individual-item" data-price="3000" data-name="Corso 1 – Prompt Engineering & AI Custom Assistant">
+                                        <span class="ml-3 flex-1 text-gray-700"><strong>Corso 1: Prompt Engineering & AI Custom Assistant</strong></span>
+                                        <span class="ml-4 font-semibold text-gray-900">€ 3.000</span>
+                                    </label>
+                                    <label class="flex items-center p-4 rounded-lg border hover:bg-gray-50 transition-colors">
+                                        <input type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 individual-item" data-price="3200" data-name="Corso 2 – AI per Video & Storytelling Visivo">
+                                        <span class="ml-3 flex-1 text-gray-700"><strong>Corso 2: AI per Video & Storytelling Visivo</strong></span>
+                                        <span class="ml-4 font-semibold text-gray-900">€ 3.200</span>
+                                    </label>
+                                    <label class="flex items-center p-4 rounded-lg border hover:bg-gray-50 transition-colors">
+                                        <input type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 individual-item" data-price="3000" data-name="Corso 3 – AI per Creatività & Design">
+                                        <span class="ml-3 flex-1 text-gray-700"><strong>Corso 3: AI per Creatività & Design</strong></span>
+                                        <span class="ml-4 font-semibold text-gray-900">€ 3.000</span>
+                                    </label>
+                                    <label class="flex items-center p-4 rounded-lg border hover:bg-gray-50 transition-colors">
+                                        <input type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 individual-item" data-price="3000" data-name="Corso 4 – AI per Copywriting & Strategie">
+                                        <span class="ml-3 flex-1 text-gray-700"><strong>Corso 4: AI per Copywriting & Strategie</strong></span>
+                                        <span class="ml-4 font-semibold text-gray-900">€ 3.000</span>
+                                    </label>
+                                    <label class="flex items-center p-4 rounded-lg border hover:bg-gray-50 transition-colors">
+                                        <input type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 individual-item" data-price="3000" data-name="Corso 5 – AI per Eventi & Presentazioni">
+                                        <span class="ml-3 flex-1 text-gray-700"><strong>Corso 5: AI per Eventi & Presentazioni</strong></span>
+                                        <span class="ml-4 font-semibold text-gray-900">€ 3.000</span>
+                                    </label>
+                                </div>
+                            </fieldset>
+
+                            <!-- Moduli Specifici (Checkbox) -->
+                            <fieldset>
+                                <legend class="text-lg font-semibold text-gray-800">Moduli Specifici (4 ore ciascuno)</legend>
+                                <div class="mt-4 space-y-3">
+                                    <label class="flex items-center p-4 rounded-lg border hover:bg-gray-50 transition-colors">
+                                        <input type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 individual-item" data-price="1000" data-name="Modulo – Storyboard & Video Editing">
+                                        <span class="ml-3 flex-1 text-gray-700"><strong>Modulo: Storyboard & Video Editing</strong> (Runway, Boords, Descript)</span>
+                                        <span class="ml-4 font-semibold text-gray-900">€ 1.000</span>
+                                    </label>
+                                    <label class="flex items-center p-4 rounded-lg border hover:bg-gray-50 transition-colors">
+                                        <input type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 individual-item" data-price="1000" data-name="Modulo – Visual Design Generativo">
+                                        <span class="ml-3 flex-1 text-gray-700"><strong>Modulo: Visual Design Generativo</strong> (Midjourney, Firefly, Leonardo)</span>
+                                        <span class="ml-4 font-semibold text-gray-900">€ 1.000</span>
+                                    </label>
+                                    <label class="flex items-center p-4 rounded-lg border hover:bg-gray-50 transition-colors">
+                                        <input type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 individual-item" data-price="1000" data-name="Modulo – Copywriting AI">
+                                        <span class="ml-3 flex-1 text-gray-700"><strong>Modulo: Copywriting AI</strong> (ChatGPT, Jasper, Copy.ai)</span>
+                                        <span class="ml-4 font-semibold text-gray-900">€ 1.000</span>
+                                    </label>
+                                    <label class="flex items-center p-4 rounded-lg border hover:bg-gray-50 transition-colors">
+                                        <input type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 individual-item" data-price="1000" data-name="Modulo – Eventi & Presentazioni">
+                                        <span class="ml-3 flex-1 text-gray-700"><strong>Modulo: Eventi & Presentazioni</strong> (Tome, Gamma, Copilot)</span>
+                                        <span class="ml-4 font-semibold text-gray-900">€ 1.000</span>
+                                    </label>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <!-- Nota Strategica -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg fade-in" style="animation-delay: 300ms;">
+                        <h2 class="text-2xl font-bold text-gray-900">💬 Nota Strategica</h2>
+                        <p class="mt-4 text-gray-600">
+                            I corsi sono pensati per generare un impatto operativo immediato: ogni team uscirà con un proprio workflow AI personalizzato (es. “Atomix Video AI”, “Atomix Copy Assistant”) da integrare nei processi quotidiani.
+                        </p>
+                        <p class="mt-2 text-gray-700 font-medium">
+                            L’obiettivo è ridurre i tempi di produzione del 40-60% e aumentare l’efficacia creativa e strategica dell’agenzia.
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Colonna destra: Riepilogo e Totale (Sticky) -->
+                <div class="lg:col-span-1 mt-10 lg:mt-0">
+                    <div class="sticky top-8 space-y-6">
+                        
+                        <!-- Card Riepilogo -->
+                        <div class="bg-white p-6 rounded-xl shadow-2xl fade-in" style="animation-delay: 400ms;">
+                            <h2 class="text-2xl font-bold text-gray-900">Riepilogo Preventivo 💼</h2>
+                            
+                            <!-- Lista Voci Selezionate -->
+                            <div class="mt-6">
+                                <h3 class="text-lg font-semibold text-gray-800">Voci Selezionate</h3>
+                                <ul id="summary-list" class="mt-3 space-y-2 text-gray-600">
+                                    <!-- Il contenuto verrà aggiunto dinamicamente da JS -->
+                                    <li id="empty-cart-message" class="text-gray-500">Nessuna opzione selezionata.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Separatore -->
+                            <div class="my-6 border-t border-gray-200"></div>
+
+                            <!-- Totale -->
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800">Totale (IVA Esclusa)</h3>
+                                <p id="total-price" class="mt-2 text-5xl font-extrabold text-indigo-600 tracking-tight">€ 0,00</p>
+                            </div>
+
+                            <button id="open-modal-btn" class="mt-8 w-full bg-indigo-600 text-white text-lg font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-transform transform hover:scale-105">
+                                Accetta Preventivo
+                            </button>
+                        </div>
+
+                        <!-- Card Dettagli Inclusi -->
+                        <div class="bg-white p-6 rounded-xl shadow-lg fade-in" style="animation-delay: 500ms;">
+                            <h3 class="text-xl font-bold text-gray-900">📦 Incluso nel prezzo</h3>
+                            <ul class="mt-4 space-y-2 text-gray-600 list-disc list-inside">
+                                <li>Docenza a cura di Stefano Giurin</li>
+                                <li>Materiali digitali (slide, prompt template)</li>
+                                <li>Workspace AI dedicato per testare strumenti</li>
+                                <li>Supporto remoto post-corso (1h Q&A)</li>
+                                <li>Attestato di partecipazione nominale</li>
+                            </ul>
+                        </div>
+
+                        <!-- Card Condizioni -->
+                        <div class="bg-white p-6 rounded-xl shadow-lg fade-in" style="animation-delay: 600ms;">
+                            <h3 class="text-xl font-bold text-gray-900">⚙️ Condizioni Economiche</h3>
+                            <ul class="mt-4 space-y-2 text-gray-600">
+                                <li><strong>Pagamento:</strong></li>
+                                <li class="ml-4">40% anticipo alla conferma</li>
+                                <li class="ml-4">40% alla prima giornata di corso</li>
+                                <li class="ml-4">20% al termine della formazione</li>
+                                <li><strong>Sede:</strong> Bologna (presso Gruppo Atomix o DNArt)</li>
+                                <li><strong>Modalità:</strong> In presenza + sessioni online</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="mt-16 bg-gray-900 text-gray-400 py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <p class="text-2xl font-bold text-white">🧠 DNArt – AI & Digital Innovation</p>
+                <p class="mt-2">Referente: Stefano Giurin</p>
+                <p>📧 stefano.giurin@google.com | 📞 351960299</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ===== Modal di Conferma Preventivo ===== -->
+    <div id="confirmation-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 z-40 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden transform transition-all" style="animation: fadeIn 0.3s ease-out;">
+            <!-- Header Modal -->
+            <div class="flex justify-between items-center p-6 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900" id="modal-title">Conferma Preventivo</h2>
+                <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600 text-3xl font-bold leading-none">&times;</button>
+            </div>
+            
+            <!-- Body Modal -->
+            <div class="p-6">
+                <p class="text-gray-600">Stai per accettare e inviare il seguente preventivo a DNArt per la conferma.</p>
+                
+                <div class="mt-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-800">Riepilogo Voci:</h3>
+                    <ul id="modal-summary-list" class="mt-3 space-y-2 text-gray-600">
+                        <!-- Riepilogo dinamico -->
+                    </ul>
+                    
+                    <div class="my-4 border-t border-gray-200"></div>
+
+                    <div class="flex justify-between items-center">
+                        <span class="text-lg font-semibold text-gray-800">Totale (IVA Esclusa):</span>
+                        <span id="modal-total-price" class="text-2xl font-extrabold text-indigo-600">€ 0,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Modal -->
+            <div class="flex justify-end gap-4 p-6 bg-gray-50 border-t border-gray-200">
+                <button id="cancel-modal-btn" class="bg-white py-2 px-5 rounded-lg border border-gray-300 text-gray-700 font-semibold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                    Annulla
+                </button>
+                <button id="confirm-send-btn" class="bg-indigo-600 text-white py-2 px-5 rounded-lg font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Conferma e Invia Email
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ===== Assistente AI "Riccardo" ===== -->
+
+    <!-- 1. Bottone Chat Fluttuante (FAB) -->
+    <button id="open-chat-btn" class="fixed bottom-8 right-8 bg-indigo-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-indigo-700 transition-transform transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 z-50 flex items-center gap-3">
+        <svg xmlns="http://www.w_org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+        <span class="font-medium">Chiedimi i dettagli</span>
+    </button>
+
+    <!-- 2. Finestra Chat (Nascosta di default) -->
+    <div id="chat-window" class="fixed bottom-24 right-8 w-96 max-w-[calc(100%-4rem)] bg-white rounded-xl shadow-2xl z-50 hidden flex-col" style="height: 600px; max-height: 80vh;">
+        <!-- Header Chat -->
+        <div class="flex justify-between items-center p-4 bg-indigo-600 text-white rounded-t-xl">
+            <div>
+                <h3 class="text-lg font-bold">Chat con Riccardo 🤖</h3>
+                <p class="text-sm text-indigo-100">Assistente AI per il preventivo</p>
+            </div>
+            <button id="close-chat-btn" class="text-indigo-100 hover:text-white text-3xl font-bold leading-none">&times;</button>
+        </div>
+        
+        <!-- Area Messaggi -->
+        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-2">
+            <!-- Messaggio di benvenuto -->
+            <div class="chat-bubble-ai">
+                Ciao! Sono Riccardo, il tuo assistente AI. Chiedimi pure informazioni sui corsi, i pacchetti o i costi di questo preventivo.
+            </div>
+        </div>
+        
+        <!-- Area Input -->
+        <div class="p-4 border-t border-gray-200">
+            <div id="chat-loading" class="hidden text-sm text-gray-500 mb-2 italic">Riccardo sta scrivendo...</div>
+            <form id="chat-form" class="flex gap-2">
+                <input type="text" id="chat-input" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Scrivi un messaggio..." autocomplete="off">
+                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Invia</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Blocco Script completo e corretto -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Logica Esistente del Preventivo ---
+            
+            // Seleziona gli elementi del DOM per il preventivo
+            const packageRadios = document.querySelectorAll('input[name="package-type"]');
+            const individualItems = document.querySelectorAll('.individual-item');
+            const individualiContainer = document.getElementById('individuali-container');
+            
+            const totalPriceEl = document.getElementById('total-price');
+            const summaryListEl = document.getElementById('summary-list');
+            const emptyCartMessage = document.getElementById('empty-cart-message');
+
+            // --- Nuovi Elementi per Modal ---
+            const openModalBtn = document.getElementById('open-modal-btn');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const cancelModalBtn = document.getElementById('cancel-modal-btn');
+            const confirmSendBtn = document.getElementById('confirm-send-btn');
+            const confirmationModal = document.getElementById('confirmation-modal');
+            const modalSummaryList = document.getElementById('modal-summary-list');
+            const modalTotalPrice = document.getElementById('modal-total-price');
+
+            // --- Stato Globale Preventivo ---
+            let currentTotal = 0;
+            let currentSummaryItems = [];
+
+            // Funzione per formattare la valuta
+            const formatCurrency = (amount) => {
+                return new Intl.NumberFormat('it-IT', {
+                    style: 'currency',
+                    currency: 'EUR',
+                    minimumFractionDigits: 2
+                }).format(amount);
+            };
+
+            // Funzione principale per aggiornare il preventivo
+            function updateQuote() {
+                // Svuota e resetta i valori correnti
+                currentTotal = 0;
+                currentSummaryItems = [];
+                
+                // Controlla quale pacchetto è selezionato
+                const selectedPackage = document.querySelector('input[name="package-type"]:checked');
+                // Assicurati che selectedPackage esista prima di leggerne il valore
+                if (!selectedPackage) return; 
+                const selectionType = selectedPackage.value;
+
+                if (selectionType === 'individuali') {
+                    // Se "Individuali" è selezionato, mostra il container e calcola i checkbox
+                    if (individualiContainer) individualiContainer.style.display = 'block';
+                    
+                    individualItems.forEach(item => {
+                        if (item.checked) {
+                            const price = parseFloat(item.dataset.price) || 0;
+                            const name = item.dataset.name || 'Voce non specificata';
+                            currentTotal += price;
+                            currentSummaryItems.push({ name, price });
+                        }
+                    });
+
+                } else {
+                    // Se è selezionato un pacchetto, nascondi i corsi individuali
+                    if (individualiContainer) individualiContainer.style.display = 'none';
+                    
+                    const price = parseFloat(selectedPackage.dataset.price) || 0;
+                    const name = selectedPackage.dataset.name || 'Pacchetto non specificato';
+                    currentTotal = price;
+                    currentSummaryItems.push({ name, price: price });
+                }
+
+                // Aggiorna il totale sul DOM
+                if (totalPriceEl) totalPriceEl.textContent = formatCurrency(currentTotal);
+
+                // Aggiorna la lista del riepilogo
+                if (summaryListEl) {
+                    summaryListEl.innerHTML = ''; // Pulisci la lista
+                    if (currentSummaryItems.length === 0) {
+                        if (emptyCartMessage) summaryListEl.appendChild(emptyCartMessage);
+                    } else {
+                        currentSummaryItems.forEach(item => {
+                            const li = document.createElement('li');
+                            li.className = 'flex justify-between items-center py-1';
+                            li.innerHTML = `
+                                <span class="flex-1 pr-4">${item.name}</span>
+                                <span class="font-medium text-gray-800">${formatCurrency(item.price)}</span>
+                            `;
+                            summaryListEl.appendChild(li);
+                        });
+                    }
+                }
+            }
+
+            // Aggiungi event listener ai radio button e ai checkbox
+            packageRadios.forEach(radio => radio.addEventListener('change', updateQuote));
+            individualItems.forEach(checkbox => checkbox.addEventListener('change', updateQuote));
+
+            // Esegui la funzione all'avvio per impostare lo stato iniziale
+            updateQuote();
+
+            // --- Logica del Modal di Conferma ---
+            if (openModalBtn) {
+                openModalBtn.addEventListener('click', () => {
+                    // Popola il modal con i dati correnti
+                    if (modalSummaryList && summaryListEl) {
+                        modalSummaryList.innerHTML = summaryListEl.innerHTML;
+                    }
+                    if (modalTotalPrice) {
+                        modalTotalPrice.textContent = formatCurrency(currentTotal);
+                    }
+                    
+                    // Mostra il modal
+                    if (confirmationModal) {
+                        confirmationModal.classList.remove('hidden');
+                    }
+                });
+            }
+
+            function closeModal() {
+                if (confirmationModal) {
+                    confirmationModal.classList.add('hidden');
+                }
+            }
+
+            if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+            if (cancelModalBtn) cancelModalBtn.addEventListener('click', closeModal);
+
+            if (confirmSendBtn) {
+                confirmSendBtn.addEventListener('click', () => {
+                    sendQuoteEmail();
+                    closeModal();
+                });
+            }
+
+            // Funzione per generare il link mailto
+            function sendQuoteEmail() {
+                const recipient = 'stefano.giurin@gmail.com'; // Come da tua richiesta
+                const subject = 'Accettazione Preventivo Formazione AI per Gruppo Atomix';
+                
+                let body = 'È stato accettato il seguente preventivo:\n\n';
+                
+                currentSummaryItems.forEach(item => {
+                    body += `- ${item.name}: ${formatCurrency(item.price)}\n`;
+                });
+                
+                body += `\nTotale (IVA Esclusa): ${formatCurrency(currentTotal)}\n\n`;
+                body += 'Cordiali saluti,\nGruppo Atomix (Inviato tramite canvas interattivo)';
+
+                // Crea il link mailto e aprilo
+                const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                window.location.href = mailtoLink;
+            }
+
+
+            // --- Nuova Logica per Assistente AI "Riccardo" ---
+
+            // Contesto del preventivo per l'AI
+            const quoteContext = `
+                Preventivo Formazione AI & Prompt Engineering per Gruppo Atomix
+                Proposto da: DNArt – AI & Digital Innovation
+                Referente: Stefano Giurin
+                Cliente: Gruppo Atomix – Agenzia di Pubblicità (Bologna)
+                Data: Novembre 2025
+                Validità offerta: 60 giorni
+                
+                Obiettivo: Formare i team creativi, strategist e account di Gruppo Atomix sull’utilizzo delle AI generative e delle tecniche di prompt engineering per migliorare efficienza, creatività e qualità delle produzioni in quattro aree chiave dell’agenzia: Video e storytelling visivo, Creatività e art direction, Copywriting e strategie di comunicazione, Progettazione e presentazione eventi.
+                
+                Struttura Formativa e Corsi (Programmi Dettagliati):
+                Ogni programma è pensato per una durata di 8 ore (4h in sede + 4h in call) per max 10 partecipanti.
+
+                Corso 1 – Prompt Engineering & Assistente AI Custom
+                Durata totale: 8 h (4 in presenza + 4 in call)
+                Prezzo: €3.000
+                Partecipanti: fino a 10
+                Obiettivo: apprendere tecniche di prompt-engineering e creare un assistente AI interno all’agenzia.
+                Programma dettagliato:
+                In presenza (4h):
+                Introduzione al prompt engineering: definizioni, ambiti, impatti. (learnprompting.org)
+                Analisi delle capacità e limiti dei modelli linguistici (LLM) e generativi. (learnprompting.org)
+                Tipologie di prompt: zero-shot, few-shot, chain of thought, persona pattern. (cognitiveclass.ai)
+                Laboratorio (in-team): scrivere prompt per casi reali dell’agenzia (brief creativo, generazione naming, assistente di briefing)
+                Discussione: metriche di efficacia del prompt, iterazione, ottimizzazione.
+                Call online (4h):
+                Revisione dei prompt realizzati dai partecipanti + feedback.
+                Costruzione del workflow dell’assistente AI: definizione requisiti, funzioni, integrazione nel team.
+                Sviluppo (demo) dell’assistente: template, API/strumento scelto, prompt base + raffinamenti.
+                Sessione Q&A e pianificazione del rollout: assegnazione task “da eseguire nei 30 giorni”.
+                
+                Corso 2 – AI per Video & Storytelling Visivo
+                Durata totale: 8 h (4h in sede + 4h online)
+                Prezzo: €3.200
+                Partecipanti: fino a 10
+                Obiettivo: sfruttare strumenti AI per ideazione, storyboard, produzione e post-produzione di video.
+                Programma dettagliato:
+                In presenza (4h):
+                Introduzione: evoluzione del video editing, ruolo dell’AI nel workflow video.
+                Strumenti per storyboard + pre-visualizzazione AI (es. Boords, Storyboarder).
+                Generazione script + voice-over + voce sintetica + lip-sync con strumenti AI.
+                Laboratorio 1: dal brief del cliente Agenzia → creazione di uno storyboard + script generato con AI.
+                Call online (4h):
+                Editing video con AI: overview tool (es. Runway, Descript) e casi pratici.
+                Laboratorio 2: montaggio veloce di un video prodotto partendo dallo storyboard precedente.
+                Workflow implementabile nell’agenzia: definizione fasi, “plug-in” AI, KPI produttivi.
+                Debrief & action-plan: come implementare internamente in 60 giorni.
+                
+                Corso 3 – AI per Creatività & Design
+                Durata totale: 8 h (4h in sede + 4h online)
+                Prezzo: €3.000
+                Partecipanti: fino a 10
+                Obiettivo: integrare AI nella creazione di visual, campagne statiche, moodboard e art direction.
+                Programma dettagliato:
+                In presenza (4h):
+                Introduzione ai tool generativi di immagini (es. Midjourney, DALL·E) e alle implicazioni per art-direction.
+                Principi di design nell’era AI: stile, coerenza brand, linee guida visive.
+                Laboratorio 1: generazione di moodboard e visual concept con AI per un mini-brief reale.
+                Discussione: controllo qualità, iterazione visiva, rifinitura manuale su output AI.
+                Call online (4h):
+                Automazione del layout e della campagna: integrazione AI + strumenti di design (es. Adobe Illustrator + plugin generativi).
+                Laboratorio 2: sviluppo di un visual completo (es. static, social/ad banner) partendo dal concept generato.
+                Workflow interno: definire come l’agenzia può adottare il tool-stack AI + definire ruoli (art director, editor AI, validazione).
+                Piano operativo: rollout, metriche, scalabilità per più progetti.
+                
+                Corso 4 – AI per Copywriting & Strategie
+                Durata totale: 8 h (4h in sede + 4h online)
+                Prezzo: €3.000
+                Partecipanti: fino a 10
+                Obiettivo: usare l’AI per generare copy, ideare strategie comunicative e velocizzare processi creativi.
+                Programma dettagliato:
+                In presenza (4h):
+                Introduzione al copywriting assistito da AI e pattern di prompting per testi.
+                Strumenti AI per testi, headline, naming, storytelling (es. Jasper, Copy.ai).
+                Laboratorio 1: generazione di concept e headline per un case-client Agenzia.
+                Revisione e miglioramento: stile, tono, adattamento al brand.
+                Call online (4h):
+                Strategia di comunicazione: come l’AI supporta l’ideazione di campagne multicanale.
+                Laboratorio 2: sviluppare un piano comunicativo (brief → ideazione AI → revisione) con il team.
+                Workflow: integrazione del tool AI nel processo dell’agenzia account-strategist → art director → copy.
+                KPI, metriche e monitoraggio: come misurare l’efficacia degli output AI.
+                
+                Corso 5 – AI per Eventi & Presentazioni
+                Durata totale: 8 h (4h in sede + 4h online)
+                Prezzo: €3.000
+                Partecipanti: fino a 10
+                Obiettivo: applicare l’AI nella progettazione e presentazione di eventi aziendali, conferenze, pitch, format innovativi.
+                Programma dettagliato:
+                In presenza (4h):
+                Introduzione alle tendenze eventi & AI: eventi ibridi/virtuali, uso dell’AI nelle presentazioni.
+                Strumenti per generare format evento, naming, presentazioni (es. Tome.app, Gamma, Microsoft PowerPoint Copilot).
+                Laboratorio 1: ideazione di un evento (tema, concept, presentazione) con l’AI.
+                Revisione e personalizzazione: coerenza brand, user experience, interattività.
+                Call online (4h):
+                Sviluppo della presentazione evento: generazione slide, script, supporti digitali AI.
+                Laboratorio 2: rifinitura del progetto evento: timeline, logistica, coinvolgimento AI.
+                Workflow interno: come integrare il processo eventi + AI nel team dell’agenzia.
+                Piano di implementazione: roadmap nei prossimi 90 giorni, metriche di successo.
+                
+                Moduli di Addestramento Specifico (4 ore, max 10 pax, €1.000 l'uno):
+                - Storyboard & Video Editing (Runway, Boords, Descript)
+                - Visual Design Generativo (Midjourney, Firefly, Leonardo AI)
+                - Copywriting AI (ChatGPT, Jasper, Copy.ai)
+                - Eventi & Presentazioni (Tome, Gamma, Copilot)
+                
+                Pacchetti Formativi Combinati:
+                - AI for Creatives (Corso Video + Corso Creatività): 16 ore, €5.500
+                - AI for Strategists (Corso Copy + Corso Eventi): 16 ore, €5.500
+                - AI Full Academy Atomix (Tutti i 5 corsi principali): 40 ore, €12.000
+                
+                Incluso nel prezzo:
+                - Docenza a cura di Stefano Giurin
+                - Materiali digitali (slide, prompt template, guide operative)
+                - Workspace AI dedicato per testare strumenti
+                - Supporto remoto post-corso (1h di Q&A team)
+                - Attestato di partecipazione nominale
+                
+                Condizioni economiche:
+                - Prezzi IVA esclusa
+                - Pagamento: 40% anticipo, 40% prima giornata, 20% al termine.
+                - Sede: Bologna (presso Gruppo Atomix o sede DNArt)
+                
+                Nota strategica: L’obiettivo è ridurre i tempi di produzione del 40-60%.
+            `;
+
+            // Istruzioni per l'assistente AI
+            const systemPrompt = `Sei 'Riccardo', un assistente AI amichevole, professionale e conciso. Il tuo unico scopo è rispondere a domande relative al preventivo di formazione AI fornito qui sotto.
+            
+            NON rispondere a domande non attinenti al preventivo (es. "che tempo fa?", "chi sei?", "cos'è l'AI?"). Se ricevi una domanda non pertinente, rispondi gentilmente: "Posso solo rispondere a domande relative a questo preventivo di formazione."
+            
+            Basa TUTTE le tue risposte ESCLUSIVAMENTE sul testo del preventivo. Non inventare informazioni. Sii breve e vai dritto al punto.
+
+            --- TESTO DEL PREVENTIVO DI RIFERIMENTO ---
+            ${quoteContext}
+            --- FINE DEL TESTO ---
+            `;
+
+            // Elementi DOM della Chat
+            const openChatBtn = document.getElementById('open-chat-btn');
+            const closeChatBtn = document.getElementById('close-chat-btn');
+            const chatWindow = document.getElementById('chat-window');
+            const chatMessages = document.getElementById('chat-messages');
+            const chatForm = document.getElementById('chat-form');
+            const chatInput = document.getElementById('chat-input');
+            const chatLoading = document.getElementById('chat-loading');
+
+            const apiKey = ""; // Chiave API gestita dall'ambiente
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+            // Cronologia chat (per mantenere il contesto)
+            let chatHistory = []; 
+
+            // Funzione per aprire/chiudere la chat
+            if (openChatBtn) {
+                openChatBtn.addEventListener('click', () => {
+                    if (chatWindow) chatWindow.classList.remove('hidden');
+                    if (chatWindow) chatWindow.classList.add('flex');
+                    if (openChatBtn) openChatBtn.classList.add('hidden');
+                });
+            }
+
+            if (closeChatBtn) {
+                closeChatBtn.addEventListener('click', () => {
+                    if (chatWindow) chatWindow.classList.add('hidden');
+                    if (chatWindow) chatWindow.classList.remove('flex');
+                    if (openChatBtn) openChatBtn.classList.remove('hidden');
+                });
+            }
+
+            // Funzione per inviare il messaggio
+            if (chatForm) {
+                chatForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    if (!chatInput) return;
+                    const userInput = chatInput.value.trim();
+                    if (!userInput) return;
+
+                    // Aggiungi messaggio utente alla UI
+                    addMessageToChat(userInput, 'user');
+                    chatInput.value = '';
+                    if (chatLoading) chatLoading.classList.remove('hidden');
+
+                    // Aggiungi alla cronologia
+                    chatHistory.push({ role: "user", parts: [{ text: userInput }] });
+
+                    try {
+                        // Chiama l'API Gemini con backoff
+                        const aiResponse = await fetchWithBackoff(apiUrl, {
+                            contents: chatHistory,
+                            systemInstruction: {
+                                parts: [{ text: systemPrompt }]
+                            },
+                        });
+
+                        const text = aiResponse.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                        if (text) {
+                            addMessageToChat(text, 'ai');
+                            chatHistory.push({ role: "model", parts: [{ text: text }] });
+                        } else {
+                            throw new Error('Risposta AI non valida');
+                        }
+
+                    } catch (error) {
+                        console.error("Errore API Gemini:", error);
+                        addMessageToChat('Ops! C\'è stato un problema. Riprova.', 'ai');
+                    } finally {
+                        if (chatLoading) chatLoading.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Funzione per aggiungere messaggi al DOM
+            function addMessageToChat(text, sender) {
+                if (!chatMessages) return;
+                const bubble = document.createElement('div');
+                bubble.className = sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai';
+                bubble.textContent = text;
+                chatMessages.appendChild(bubble);
+                // Scroll automatico all'ultimo messaggio
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Funzione Fetch con Exponential Backoff (richiesta dalle istruzioni)
+            async function fetchWithBackoff(url, options, retries = 5, delay = 1000) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(options)
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 429 || response.status >= 500) { // Throttling o errore server
+                            throw new Error(`Server error: ${response.status}`);
+                        }
+                        const errorData = await response.json();
+                        throw new Error(errorData.error?.message || 'Errore API sconosciuto');
+                    }
+                    return await response.json();
+                
+                } catch (error) {
+                    if (retries > 0) {
+                        await new Promise(res => setTimeout(res, delay));
+                        return fetchWithBackoff(url, options, retries - 1, delay * 2);
+                    } else {
+                        throw error;
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
